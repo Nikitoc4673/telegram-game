@@ -1,12 +1,9 @@
-Вот HTML-код игры-кликера с накоплением очков, улучшениями и анимацией:
-
-```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>🍪 Кликер-печенька</title>
+    <title>🍪 Кликер-печенька (плавный)</title>
     <style>
         * {
             margin: 0;
@@ -35,13 +32,12 @@
             width: 100%;
             max-width: 420px;
             border: 2px solid #d49b6a;
-            transition: transform 0.2s;
         }
 
         h1 {
             color: #4a2c1a;
             text-shadow: 2px 2px 0 #e7c68b;
-            font-size: 2.6rem;
+            font-size: 2.2rem;
             margin-bottom: 5px;
             letter-spacing: 2px;
             font-weight: 800;
@@ -50,21 +46,21 @@
         .score-panel {
             background: #5e3a22;
             border-radius: 100px;
-            padding: 15px 25px;
-            margin: 15px 0;
+            padding: 12px 25px;
+            margin: 10px 0;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 12px;
+            gap: 10px;
             color: #ffd78b;
             font-weight: bold;
-            font-size: 2.2rem;
+            font-size: 2rem;
             box-shadow: inset 0 4px 8px rgba(0,0,0,0.5), 0 8px 12px rgba(0,0,0,0.3);
             border: 2px solid #b7824a;
         }
 
         .cookie-icon {
-            font-size: 2.2rem;
+            font-size: 2rem;
             filter: drop-shadow(0 4px 4px black);
         }
 
@@ -72,40 +68,39 @@
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 8rem;
-            transition: transform 0.07s ease;
+            font-size: 7rem;
+            transition: transform 0.05s ease;
             filter: drop-shadow(0 18px 12px rgba(0,0,0,0.5));
-            margin: 15px 0 5px;
+            margin: 10px 0 5px;
             padding: 0;
             line-height: 1;
             display: inline-block;
             user-select: none;
             -webkit-tap-highlight-color: transparent;
+            will-change: transform;
         }
 
         #clicker-btn:active {
-            transform: scale(0.85);
-            filter: drop-shadow(0 8px 8px rgba(0,0,0,0.6));
+            transform: scale(0.88);
         }
 
         .per-second {
             background: #dfcba4;
             border-radius: 30px;
-            padding: 8px 18px;
+            padding: 6px 18px;
             display: inline-block;
-            margin: 5px 0 15px;
+            margin: 5px 0 12px;
             font-weight: 600;
             color: #3b2b19;
             border: 1px solid #b59564;
-            font-size: 1.1rem;
-            box-shadow: inset 0 1px 4px white;
+            font-size: 1rem;
         }
 
         .upgrades-section {
             background: #f5e7d3;
             border-radius: 45px;
-            padding: 18px 12px;
-            margin-top: 15px;
+            padding: 15px 10px;
+            margin-top: 12px;
             box-shadow: inset 0 2px 8px rgba(90, 50, 10, 0.5);
             border: 2px solid #c89f72;
         }
@@ -115,13 +110,13 @@
             align-items: center;
             justify-content: space-between;
             background: #fef7e9;
-            margin: 10px 0;
-            padding: 12px 15px;
+            margin: 8px 0;
+            padding: 10px 12px;
             border-radius: 40px;
             border: 2px solid #b5824a;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            box-shadow: 0 3px 5px rgba(0,0,0,0.2);
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
         }
 
         .upgrade-info {
@@ -133,14 +128,14 @@
         }
 
         .upgrade-name {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 4px;
         }
 
         .upgrade-effect {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #6b4f32;
             background: #ffe3b0;
             padding: 2px 10px;
@@ -148,22 +143,22 @@
         }
 
         .buy-btn {
-            background: #fdae5c;
+            background: linear-gradient(180deg, #ffc107 0%, #f08a2d 100%);
             border: none;
             border-radius: 35px;
-            padding: 12px 18px;
+            padding: 10px 16px;
             font-weight: bold;
-            font-size: 1rem;
+            font-size: 0.95rem;
             color: #382813;
-            background: linear-gradient(180deg, #ffc107 0%, #f08a2d 100%);
             border-bottom: 4px solid #b45f1a;
             cursor: pointer;
-            transition: 0.1s linear;
+            transition: all 0.1s;
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 5px;
             white-space: nowrap;
+            will-change: transform;
         }
 
         .buy-btn:active {
@@ -174,7 +169,7 @@
 
         .buy-btn:disabled {
             opacity: 0.5;
-            filter: grayscale(0.6);
+            filter: grayscale(0.5);
             border-bottom-width: 2px;
             transform: none;
             pointer-events: none;
@@ -183,7 +178,7 @@
         }
 
         .reset-btn {
-            background: #c9a78b;
+            background: #e7c9a8;
             border: none;
             border-radius: 30px;
             padding: 8px 20px;
@@ -192,8 +187,7 @@
             color: #352415;
             border-bottom: 3px solid #745d46;
             cursor: pointer;
-            transition: 0.2s;
-            background: #e7c9a8;
+            transition: 0.1s;
         }
 
         .reset-btn:active {
@@ -201,26 +195,16 @@
             border-bottom-width: 2px;
         }
 
+        /* Плавающий текст — теперь через requestAnimationFrame, легче */
         .float-text {
             position: fixed;
             pointer-events: none;
-            animation: floatUp 0.9s ease-out forwards;
             font-weight: bold;
             color: #fbe555;
             text-shadow: 2px 2px 0 #5e3300;
             font-size: 1.8rem;
             z-index: 999;
-        }
-
-        @keyframes floatUp {
-            0% {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-            100% {
-                opacity: 0;
-                transform: translateY(-70px) scale(1.4);
-            }
+            will-change: transform, opacity;
         }
     </style>
 </head>
@@ -240,21 +224,21 @@
         </div>
 
         <div class="upgrades-section">
-            <div class="upgrade-row" id="upgrade-cursor">
+            <div class="upgrade-row">
                 <div class="upgrade-info">
                     <span class="upgrade-name">🖱️ Курсор</span>
                     <span class="upgrade-effect">+1 печенька/клик</span>
                 </div>
                 <button class="buy-btn" id="buy-cursor-btn">💰 <span id="cursor-cost">15</span></button>
             </div>
-            <div class="upgrade-row" id="upgrade-grandma">
+            <div class="upgrade-row">
                 <div class="upgrade-info">
                     <span class="upgrade-name">👵 Бабуля</span>
                     <span class="upgrade-effect">+1 печенька/сек</span>
                 </div>
                 <button class="buy-btn" id="buy-grandma-btn">💰 <span id="grandma-cost">100</span></button>
             </div>
-            <div class="upgrade-row" id="upgrade-farm">
+            <div class="upgrade-row">
                 <div class="upgrade-info">
                     <span class="upgrade-name">🌾 Ферма</span>
                     <span class="upgrade-effect">+5 печенек/сек</span>
@@ -264,201 +248,176 @@
         </div>
 
         <button class="reset-btn" id="reset-button">🔄 Сбросить прогресс</button>
-        <div style="font-size:0.8rem; margin-top:8px; color:#6b4e2e;">Кликай по печеньке!</div>
+        <div style="font-size:0.8rem; margin-top:6px; color:#6b4e2e;">Кликай по печеньке!</div>
     </div>
 
     <script>
         (function() {
-            // ---------- СОСТОЯНИЕ ИГРЫ ----------
+            // Состояние
             const state = {
                 cookies: 0,
-                clickPower: 1,        // базовый клик = 1 печенька
-                cookiesPerSecond: 0,
-                // Уровни улучшений
                 cursors: 0,
                 grandmas: 0,
                 farms: 0,
-                // Базовые стоимости
                 baseCursorCost: 15,
                 baseGrandmaCost: 100,
-                baseFarmCost: 500
+                baseFarmCost: 500,
+                cookiesPerSecond: 0
             };
 
             // DOM элементы
             const cookieCountEl = document.getElementById('cookie-count');
             const cookiesPerSecEl = document.getElementById('cookies-per-sec');
             const clickerBtn = document.getElementById('clicker-btn');
-            
             const buyCursorBtn = document.getElementById('buy-cursor-btn');
             const cursorCostEl = document.getElementById('cursor-cost');
-            
             const buyGrandmaBtn = document.getElementById('buy-grandma-btn');
             const grandmaCostEl = document.getElementById('grandma-cost');
-            
             const buyFarmBtn = document.getElementById('buy-farm-btn');
             const farmCostEl = document.getElementById('farm-cost');
-            
             const resetBtn = document.getElementById('reset-button');
 
-            // ---------- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ----------
-            function calculateCursorCost() {
+            // Кэшируем вычисления стоимости
+            function getCursorCost() {
                 return Math.floor(state.baseCursorCost * Math.pow(1.15, state.cursors));
             }
-
-            function calculateGrandmaCost() {
+            function getGrandmaCost() {
                 return Math.floor(state.baseGrandmaCost * Math.pow(1.15, state.grandmas));
             }
-
-            function calculateFarmCost() {
+            function getFarmCost() {
                 return Math.floor(state.baseFarmCost * Math.pow(1.15, state.farms));
             }
 
-            // Обновить cookiesPerSecond на основе зданий
-            function updateCookiesPerSecond() {
+            function updatePerSecond() {
                 state.cookiesPerSecond = state.grandmas * 1 + state.farms * 5;
                 cookiesPerSecEl.textContent = state.cookiesPerSecond;
             }
 
-            // Полное обновление интерфейса (кнопки, текст)
+            // Обновление UI (без пересоздания, только текст)
             function refreshUI() {
                 cookieCountEl.textContent = Math.floor(state.cookies);
-                cookiesPerSecEl.textContent = state.cookiesPerSecond;
                 
-                const cursorCost = calculateCursorCost();
-                cursorCostEl.textContent = cursorCost;
-                buyCursorBtn.disabled = (state.cookies < cursorCost);
+                const cCost = getCursorCost();
+                cursorCostEl.textContent = cCost;
+                buyCursorBtn.disabled = (state.cookies < cCost);
                 
-                const grandmaCost = calculateGrandmaCost();
-                grandmaCostEl.textContent = grandmaCost;
-                buyGrandmaBtn.disabled = (state.cookies < grandmaCost);
+                const gCost = getGrandmaCost();
+                grandmaCostEl.textContent = gCost;
+                buyGrandmaBtn.disabled = (state.cookies < gCost);
                 
-                const farmCost = calculateFarmCost();
-                farmCostEl.textContent = farmCost;
-                buyFarmBtn.disabled = (state.cookies < farmCost);
+                const fCost = getFarmCost();
+                farmCostEl.textContent = fCost;
+                buyFarmBtn.disabled = (state.cookies < fCost);
             }
 
-            // Добавление печенек (с анимацией)
-            function addCookies(amount, eventX = null, eventY = null) {
-                if (amount <= 0) return;
-                state.cookies += amount;
-                
-                // Создаём плавающий текст, если переданы координаты
-                if (eventX !== null && eventY !== null && amount >= 1) {
-                    createFloatingText(eventX, eventY, `+${Math.floor(amount)}`);
+            // Оптимизированная анимация: создаём элемент, анимируем через JS, а не CSS-анимацию
+            function spawnFloatingText(x, y, text) {
+                const el = document.createElement('div');
+                el.className = 'float-text';
+                el.textContent = text;
+                el.style.left = x + 'px';
+                el.style.top = y + 'px';
+                el.style.opacity = '1';
+                el.style.transform = 'translateY(0) scale(1)';
+                document.body.appendChild(el);
+
+                let start = null;
+                const duration = 700; // мс
+
+                function animate(timestamp) {
+                    if (!start) start = timestamp;
+                    const progress = timestamp - start;
+                    const fraction = Math.min(progress / duration, 1);
+                    
+                    el.style.opacity = (1 - fraction).toString();
+                    el.style.transform = `translateY(${-60 * fraction}px) scale(${1 + fraction * 0.4})`;
+                    
+                    if (fraction < 1) {
+                        requestAnimationFrame(animate);
+                    } else {
+                        el.remove();
+                    }
                 }
                 
+                requestAnimationFrame(animate);
+            }
+
+            function addCookies(amount, eventX, eventY) {
+                if (amount <= 0) return;
+                state.cookies += amount;
+                if (eventX != null && eventY != null) {
+                    spawnFloatingText(eventX, eventY, `+${Math.floor(amount)}`);
+                }
                 refreshUI();
             }
 
-            // Анимация "+число"
-            function createFloatingText(x, y, text) {
-                const floatEl = document.createElement('div');
-                floatEl.className = 'float-text';
-                floatEl.textContent = text;
-                floatEl.style.left = `${x}px`;
-                floatEl.style.top = `${y}px`;
-                document.body.appendChild(floatEl);
-                
-                floatEl.addEventListener('animationend', () => {
-                    floatEl.remove();
-                });
-            }
-
-            // Покупка улучшения (универсальная логика)
-            function purchaseUpgrade(cost, onSuccess) {
-                if (state.cookies >= cost) {
-                    state.cookies -= cost;
-                    onSuccess();
-                    refreshUI();
-                    return true;
-                }
-                return false;
-            }
-
-            // ---------- ДЕЙСТВИЯ ИГРОКА ----------
-            function handleCookieClick(event) {
-                // Определяем координаты для анимации
+            // Обработчик клика (мышь и тач)
+            function onCookieInteraction(e) {
+                e.preventDefault();
                 let clientX, clientY;
-                if (event.touches) {
-                    // Мобильное касание
-                    clientX = event.touches[0].clientX;
-                    clientY = event.touches[0].clientY;
+                if (e.touches) {
+                    clientX = e.touches[0].clientX;
+                    clientY = e.touches[0].clientY;
                 } else {
-                    clientX = event.clientX;
-                    clientY = event.clientY;
+                    clientX = e.clientX;
+                    clientY = e.clientY;
                 }
-                
-                const power = state.clickPower + state.cursors; // каждый курсор +1 к клику
+                const power = 1 + state.cursors; // базовая сила + курсоры
                 addCookies(power, clientX, clientY);
             }
 
-            function buyCursor() {
-                const cost = calculateCursorCost();
-                purchaseUpgrade(cost, () => {
-                    state.cursors++;
-                    // клик-сила увеличивается за счёт курсоров (учтено в handleCookieClick)
-                });
+            clickerBtn.addEventListener('click', onCookieInteraction);
+            clickerBtn.addEventListener('touchstart', onCookieInteraction, { passive: false });
+
+            // Покупки
+            function buyUpgrade(costFn, upgradeAction) {
+                const cost = costFn();
+                if (state.cookies >= cost) {
+                    state.cookies -= cost;
+                    upgradeAction();
+                    refreshUI();
+                }
             }
 
-            function buyGrandma() {
-                const cost = calculateGrandmaCost();
-                purchaseUpgrade(cost, () => {
+            buyCursorBtn.addEventListener('click', () => {
+                buyUpgrade(getCursorCost, () => { state.cursors++; });
+            });
+            buyGrandmaBtn.addEventListener('click', () => {
+                buyUpgrade(getGrandmaCost, () => {
                     state.grandmas++;
-                    updateCookiesPerSecond();
+                    updatePerSecond();
                 });
-            }
-
-            function buyFarm() {
-                const cost = calculateFarmCost();
-                purchaseUpgrade(cost, () => {
+            });
+            buyFarmBtn.addEventListener('click', () => {
+                buyUpgrade(getFarmCost, () => {
                     state.farms++;
-                    updateCookiesPerSecond();
+                    updatePerSecond();
                 });
-            }
+            });
 
-            function resetGame() {
-                if (confirm('Точно сбросить всё? Прогресс будет потерян.')) {
+            resetBtn.addEventListener('click', () => {
+                if (confirm('Точно сбросить всё?')) {
                     state.cookies = 0;
                     state.cursors = 0;
                     state.grandmas = 0;
                     state.farms = 0;
-                    state.clickPower = 1;
-                    updateCookiesPerSecond();
+                    updatePerSecond();
                     refreshUI();
                 }
-            }
+            });
 
-            // ---------- АВТОМАТИЧЕСКОЕ ПРОИЗВОДСТВО (каждую секунду) ----------
-            function gameLoop() {
+            // Авто-доход раз в секунду (без анимации, чтобы не спамить)
+            setInterval(() => {
                 if (state.cookiesPerSecond > 0) {
-                    // Добавляем печеньки без анимации (или с анимацией от центра? без координат)
-                    addCookies(state.cookiesPerSecond, null, null);
+                    state.cookies += state.cookiesPerSecond;
+                    refreshUI();
                 }
-            }
+            }, 1000);
 
-            // ---------- ПРИВЯЗКА СОБЫТИЙ ----------
-            clickerBtn.addEventListener('click', handleCookieClick);
-            clickerBtn.addEventListener('touchstart', (e) => {
-                e.preventDefault(); // чтобы не было двойного срабатывания на мобильных
-                handleCookieClick(e);
-            }, {passive: false});
-            
-            buyCursorBtn.addEventListener('click', buyCursor);
-            buyGrandmaBtn.addEventListener('click', buyGrandma);
-            buyFarmBtn.addEventListener('click', buyFarm);
-            resetBtn.addEventListener('click', resetGame);
-
-            // Инициализация интерфейса
-            updateCookiesPerSecond();
+            // Стартовое обновление
+            updatePerSecond();
             refreshUI();
-
-            // Запуск игрового цикла (каждые 1000 мс)
-            setInterval(gameLoop, 1000);
-
-            // Дополнительно: сохранять прогресс? (для простоты без сохранения, но можно добавить)
-            console.log('🍪 Кликер готов! Жми на печеньку.');
         })();
     </script>
 </body>
 </html>
-```
