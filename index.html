@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>⚔️ РПГ: Подземелье теней</title>
+    <title>📜 РПГ: Тени над королевством</title>
     <style>
         * {
             margin: 0;
@@ -12,8 +12,8 @@
         }
         
         body {
-            background: #0d0d0d;
-            background-image: radial-gradient(ellipse at center, #1a1a2e 0%, #0a0a0f 100%);
+            background: #0a0a0c;
+            background-image: radial-gradient(ellipse at top, #1c1c2a 0%, #080810 70%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -24,11 +24,11 @@
         }
 
         .game-container {
-            background: linear-gradient(180deg, #1e1a16 0%, #14100c 100%);
-            border: 3px solid #5a4a3a;
-            border-radius: 30px;
-            padding: 20px 18px;
-            box-shadow: 0 0 40px rgba(200, 150, 50, 0.3), inset 0 0 30px rgba(0,0,0,0.8);
+            background: linear-gradient(180deg, #1a1814 0%, #0f0d09 100%);
+            border: 3px solid #5a4a30;
+            border-radius: 28px;
+            padding: 18px 16px;
+            box-shadow: 0 0 50px rgba(180, 130, 40, 0.2), inset 0 0 40px rgba(0,0,0,0.8);
             width: 100%;
             max-width: 460px;
             color: #d4c5a9;
@@ -37,283 +37,272 @@
 
         .title {
             text-align: center;
-            font-size: 1.9rem;
+            font-size: 1.7rem;
             font-weight: bold;
             color: #f0c060;
-            text-shadow: 0 0 15px #b87c1a, 2px 2px 0 #3a2a10;
-            letter-spacing: 3px;
-            margin-bottom: 8px;
+            text-shadow: 0 0 18px #b87c1a, 2px 2px 0 #3a2a10;
+            letter-spacing: 2px;
+            margin-bottom: 2px;
         }
 
-        .subtitle {
+        .chapter {
             text-align: center;
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: #9b8c70;
-            margin-bottom: 12px;
-            letter-spacing: 1px;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            font-style: italic;
         }
 
-        /* Панель персонажа */
         .hero-panel {
             background: #1c1610;
             border: 2px solid #5e4e38;
-            border-radius: 20px;
-            padding: 12px 15px;
-            margin-bottom: 14px;
+            border-radius: 18px;
+            padding: 10px 14px;
+            margin-bottom: 12px;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px 15px;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.7);
+            gap: 6px 14px;
+            box-shadow: inset 0 0 18px rgba(0,0,0,0.7);
+            font-size: 0.9rem;
         }
 
         .stat {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.95rem;
+            gap: 6px;
         }
+        .stat-icon { font-size: 1.2rem; }
+        .stat-value { color: #f5d78c; font-weight: bold; }
 
-        .stat-icon {
-            font-size: 1.3rem;
-        }
-
-        .stat-value {
-            color: #f5d78c;
-            font-weight: bold;
-        }
-
-        .hp-bar-bg {
+        .hp-bar-bg, .xp-bar-bg {
             grid-column: span 2;
-            height: 18px;
+            height: 16px;
             background: #2a1a1a;
             border-radius: 20px;
             border: 1px solid #5a3a3a;
             overflow: hidden;
-            margin-top: 2px;
         }
-
+        .xp-bar-bg { height: 10px; background: #1a1a2e; border-color: #3a3a5a; }
         .hp-bar-fill {
             height: 100%;
             width: 100%;
             background: linear-gradient(180deg, #c0392b, #8b1a1a);
             border-radius: 20px;
-            transition: width 0.25s ease;
-            box-shadow: inset 0 2px 6px rgba(255,100,100,0.5);
+            transition: width 0.3s;
+            box-shadow: inset 0 2px 5px rgba(255,100,100,0.5);
         }
-
-        .xp-bar-bg {
-            grid-column: span 2;
-            height: 12px;
-            background: #1a1a2e;
-            border-radius: 20px;
-            border: 1px solid #3a3a5a;
-            overflow: hidden;
-        }
-
         .xp-bar-fill {
             height: 100%;
             width: 0%;
             background: linear-gradient(180deg, #7d5fff, #4a2db5);
             border-radius: 20px;
-            transition: width 0.25s ease;
+            transition: width 0.3s;
         }
 
-        /* Окно сообщений */
-        .log-window {
+        .story-box {
             background: #0c0a07;
             border: 2px solid #3a3025;
             border-radius: 15px;
             padding: 12px;
-            height: 130px;
+            margin-bottom: 12px;
+            font-style: italic;
+            color: #c8b898;
+            line-height: 1.6;
+            box-shadow: inset 0 0 20px black;
+            font-size: 0.95rem;
+            min-height: 60px;
+        }
+
+        .log-window {
+            background: #0c0a07;
+            border: 2px solid #3a3025;
+            border-radius: 15px;
+            padding: 10px;
+            height: 110px;
             overflow-y: auto;
-            margin-bottom: 14px;
-            font-size: 0.9rem;
+            margin-bottom: 12px;
+            font-size: 0.85rem;
             line-height: 1.5;
-            color: #c0b090;
-            box-shadow: inset 0 0 25px black;
-            scroll-behavior: smooth;
+            color: #b0a080;
+            box-shadow: inset 0 0 20px black;
         }
+        .log-entry { border-bottom: 1px dotted #2a251a; padding: 2px 0; }
+        .log-entry.damage { color: #e05a5a; }
+        .log-entry.heal { color: #6fcf6f; }
+        .log-entry.gold { color: #f5c542; }
+        .log-entry.story { color: #c9a0dc; font-style: italic; }
 
-        .log-entry {
-            border-bottom: 1px dotted #3a3025;
-            padding: 3px 0;
-        }
-
-        .log-entry.damage {
-            color: #e05a5a;
-        }
-        .log-entry.heal {
-            color: #6fcf6f;
-        }
-        .log-entry.gold {
-            color: #f5c542;
-        }
-        .log-entry.levelup {
-            color: #bb86fc;
-            font-weight: bold;
-            text-shadow: 0 0 8px #7c4dff;
-        }
-
-        /* Блок врага */
         .enemy-panel {
             background: #1c1414;
             border: 2px solid #6b3a3a;
-            border-radius: 20px;
-            padding: 12px 15px;
-            margin-bottom: 14px;
+            border-radius: 18px;
+            padding: 10px 14px;
+            margin-bottom: 12px;
             text-align: center;
-            box-shadow: 0 0 20px rgba(180, 50, 50, 0.25);
-            transition: opacity 0.3s;
+            box-shadow: 0 0 18px rgba(180, 50, 50, 0.2);
         }
-
-        .enemy-name {
-            font-size: 1.4rem;
-            font-weight: bold;
-            color: #e07b7b;
-            text-shadow: 0 0 10px #5a2020;
-        }
-
+        .enemy-name { font-size: 1.3rem; font-weight: bold; color: #e07b7b; }
         .enemy-hp-bar-bg {
-            height: 14px;
+            height: 12px;
             background: #2a1a1a;
             border-radius: 20px;
             border: 1px solid #5a3030;
-            margin: 8px 0;
+            margin: 6px 0;
             overflow: hidden;
         }
-
         .enemy-hp-bar-fill {
             height: 100%;
             width: 100%;
             background: linear-gradient(180deg, #d44a4a, #8b1a1a);
             border-radius: 20px;
-            transition: width 0.2s ease;
+            transition: width 0.2s;
+        }
+        .enemy-stats { font-size: 0.8rem; color: #b09080; }
+
+        .choices {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            justify-content: center;
+            margin-bottom: 8px;
+        }
+        .choice-btn {
+            background: linear-gradient(180deg, #2a2520, #181410);
+            border: 2px solid #5a4a35;
+            color: #d4b87a;
+            font-family: 'Georgia', serif;
+            font-size: 0.9rem;
+            font-weight: bold;
+            padding: 10px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.15s;
+            box-shadow: 0 4px 0 #0a0805, 0 5px 10px black;
+            flex: 1 1 auto;
+            min-width: 70px;
+            text-shadow: 1px 1px 0 black;
+            text-align: center;
+        }
+        .choice-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 1px 0 #0a0805, 0 3px 6px black;
+        }
+        .choice-btn:disabled {
+            opacity: 0.4;
+            transform: none;
+            box-shadow: 0 1px 0 #0a0805;
+            pointer-events: none;
+            filter: grayscale(0.5);
         }
 
-        .enemy-stats {
-            font-size: 0.8rem;
-            color: #b09080;
-        }
-
-        /* Кнопки действий */
         .actions {
             display: flex;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             justify-content: center;
         }
-
         .action-btn {
             background: linear-gradient(180deg, #3a3530, #1f1b17);
             border: 2px solid #6b5d4a;
             color: #e0cfa0;
             font-family: 'Georgia', serif;
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: bold;
-            padding: 12px 16px;
-            border-radius: 40px;
+            padding: 10px 14px;
+            border-radius: 35px;
             cursor: pointer;
             transition: all 0.15s;
-            box-shadow: 0 5px 0 #0d0b08, 0 6px 12px black;
-            letter-spacing: 1px;
+            box-shadow: 0 4px 0 #0d0b08, 0 5px 10px black;
             flex: 1 1 auto;
-            min-width: 80px;
-            text-shadow: 1px 1px 0 black;
+            min-width: 60px;
         }
-
         .action-btn:active {
             transform: translateY(3px);
-            box-shadow: 0 2px 0 #0d0b08, 0 4px 8px black;
-            background: #2a2520;
+            box-shadow: 0 1px 0 #0d0b08, 0 3px 6px black;
         }
-
         .action-btn:disabled {
             opacity: 0.4;
             transform: none;
-            box-shadow: 0 2px 0 #0d0b08;
+            box-shadow: 0 1px 0 #0d0b08;
             pointer-events: none;
             filter: grayscale(0.5);
-        }
-
-        .restart-btn {
-            background: linear-gradient(180deg, #4a3030, #2a1515);
-            border-color: #7a4a4a;
-            margin-top: 5px;
-            width: 100%;
-            font-size: 0.9rem;
-            padding: 10px;
         }
 
         .dead-message {
             color: #ff6b6b;
             font-weight: bold;
             text-align: center;
-            margin: 8px 0;
-            font-size: 1.2rem;
-            text-shadow: 0 0 12px red;
+            margin: 6px 0;
+            font-size: 1.1rem;
+            text-shadow: 0 0 10px red;
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <div class="title">⚔️ ПОДЗЕМЕЛЬЕ ТЕНЕЙ</div>
-        <div class="subtitle">Герой спускается во тьму...</div>
+        <div class="title">🏰 ТЕНИ НАД КОРОЛЕВСТВОМ</div>
+        <div class="chapter" id="chapter-title">Глава I: Зов тьмы</div>
 
-        <!-- Панель героя -->
         <div class="hero-panel">
             <div class="stat"><span class="stat-icon">❤️</span> HP: <span class="stat-value" id="hero-hp-text">100/100</span></div>
-            <div class="stat"><span class="stat-icon">⚔️</span> Атака: <span class="stat-value" id="hero-atk">12</span></div>
+            <div class="stat"><span class="stat-icon">⚔️</span> Атака: <span class="stat-value" id="hero-atk">10</span></div>
             <div class="stat"><span class="stat-icon">🛡️</span> Защита: <span class="stat-value" id="hero-def">4</span></div>
             <div class="stat"><span class="stat-icon">💰</span> Золото: <span class="stat-value" id="hero-gold">0</span></div>
             <div class="hp-bar-bg"><div class="hp-bar-fill" id="hero-hp-bar"></div></div>
-            <div style="grid-column: span 2; font-size:0.75rem; color:#9b8c70;">Уровень <span id="hero-lvl">1</span> | Опыт: <span id="hero-xp">0</span>/<span id="hero-xp-next">20</span></div>
-            <div class="xp-bar-bg" style="grid-column: span 2;"><div class="xp-bar-fill" id="hero-xp-bar"></div></div>
+            <div style="grid-column: span 2; font-size:0.7rem; color:#9b8c70;">Ур. <span id="hero-lvl">1</span> | Опыт: <span id="hero-xp">0</span>/<span id="hero-xp-next">20</span> | 🧪 <span id="hero-potions">3</span></div>
+            <div class="xp-bar-bg"><div class="xp-bar-fill" id="hero-xp-bar"></div></div>
         </div>
 
-        <!-- Лог событий -->
+        <div class="story-box" id="story-box">
+            Принцесса Алисия похищена тёмным культом. Ты — её последняя надежда. Спускайся в катакомбы...
+        </div>
+
         <div class="log-window" id="log-window">
-            <div class="log-entry">Ты входишь в сырое подземелье...</div>
+            <div class="log-entry story">📜 Твоё приключение начинается...</div>
         </div>
 
-        <!-- Враг -->
         <div class="enemy-panel" id="enemy-panel">
             <div class="enemy-name" id="enemy-name">🐀 Крыса</div>
             <div class="enemy-hp-bar-bg"><div class="enemy-hp-bar-fill" id="enemy-hp-bar"></div></div>
             <div class="enemy-stats">❤️ <span id="enemy-hp-text">18/18</span> | ⚔️ <span id="enemy-atk">5</span></div>
         </div>
 
-        <!-- Кнопки -->
-        <div class="actions">
+        <div class="choices" id="choices-container"></div>
+
+        <div class="actions" id="actions-container">
             <button class="action-btn" id="btn-attack">⚔️ Атака</button>
             <button class="action-btn" id="btn-defend">🛡️ Защита</button>
             <button class="action-btn" id="btn-potion">🧪 Зелье</button>
         </div>
-        <button class="action-btn restart-btn" id="btn-restart">💀 Начать заново</button>
-        <div class="dead-message" id="dead-message" style="display:none;">💀 Вы пали в бою...</div>
+        <div class="dead-message" id="dead-message" style="display:none;">💀 Вы пали... Нажмите "Новая игра"</div>
+        <button class="choice-btn" id="btn-restart" style="width:100%; margin-top:6px; background:#3a2020; border-color:#6a3030;">🔄 Новая игра</button>
     </div>
 
     <script>
         (function() {
-            // ========== СОСТОЯНИЕ ГЕРОЯ ==========
+            // ========== ГЕРОЙ ==========
             const hero = {
-                maxHp: 100,
-                hp: 100,
-                baseAtk: 8,
-                baseDef: 3,
-                atk: 8,
-                def: 3,
-                gold: 0,
-                level: 1,
-                xp: 0,
-                xpNext: 20,
-                potions: 3,
-                defending: false
+                maxHp: 100, hp: 100, baseAtk: 8, baseDef: 3,
+                atk: 8, def: 3, gold: 0, level: 1, xp: 0, xpNext: 20,
+                potions: 3, defending: false
             };
 
-            // ========== ТЕКУЩИЙ ВРАГ ==========
-            let enemy = null;
+            // ========== СЮЖЕТНЫЕ ПЕРЕМЕННЫЕ ==========
+            let storyFlags = {
+                rescuedPrisoner: false,
+                acceptedDeal: false,
+                foundArtifact: false,
+                sparedBoss: false,
+                chapter: 1,
+                roomsCleared: 0,
+                gameEnded: false
+            };
 
-            // ========== DOM ЭЛЕМЕНТЫ ==========
+            let enemy = null;
+            let currentChoice = null; // активный сюжетный выбор
+
+            // ========== DOM ==========
             const heroHpText = document.getElementById('hero-hp-text');
             const heroAtkEl = document.getElementById('hero-atk');
             const heroDefEl = document.getElementById('hero-def');
@@ -323,21 +312,23 @@
             const heroXpEl = document.getElementById('hero-xp');
             const heroXpNextEl = document.getElementById('hero-xp-next');
             const heroXpBar = document.getElementById('hero-xp-bar');
-
+            const heroPotionsEl = document.getElementById('hero-potions');
+            const storyBox = document.getElementById('story-box');
+            const chapterTitle = document.getElementById('chapter-title');
+            const logWindow = document.getElementById('log-window');
             const enemyNameEl = document.getElementById('enemy-name');
             const enemyHpText = document.getElementById('enemy-hp-text');
             const enemyAtkEl = document.getElementById('enemy-atk');
             const enemyHpBar = document.getElementById('enemy-hp-bar');
-
-            const logWindow = document.getElementById('log-window');
             const deadMessage = document.getElementById('dead-message');
-
+            const choicesContainer = document.getElementById('choices-container');
+            const actionsContainer = document.getElementById('actions-container');
             const btnAttack = document.getElementById('btn-attack');
             const btnDefend = document.getElementById('btn-defend');
             const btnPotion = document.getElementById('btn-potion');
             const btnRestart = document.getElementById('btn-restart');
 
-            // ========== ВРАГИ (пул) ==========
+            // ========== ВРАГИ ==========
             const enemyPool = [
                 { name: '🐀 Крыса', hp: 18, atk: 5, xpReward: 8, goldReward: 8 },
                 { name: '🕷️ Паук', hp: 25, atk: 8, xpReward: 12, goldReward: 12 },
@@ -345,30 +336,146 @@
                 { name: '👹 Орк', hp: 55, atk: 15, xpReward: 25, goldReward: 25 },
                 { name: '🐉 Дрейк', hp: 75, atk: 20, xpReward: 35, goldReward: 35 },
                 { name: '👁️ Глаз-тиран', hp: 100, atk: 25, xpReward: 50, goldReward: 50 },
+                { name: '🧙 Культист', hp: 60, atk: 18, xpReward: 30, goldReward: 30 },
+                { name: '👿 Демон', hp: 90, atk: 28, xpReward: 60, goldReward: 60 },
             ];
 
-            // ========== ФУНКЦИИ ==========
+            const bosses = [
+                { name: '💀 Некромант Морзан', hp: 130, atk: 22, xpReward: 80, goldReward: 100, story: 'Глава II: Тёмный ритуал' },
+                { name: '🐉 Дракон Бездны', hp: 180, atk: 30, xpReward: 150, goldReward: 200, story: 'Глава III: Логово дракона' },
+                { name: '👁️ Архидемон Ксаракс', hp: 250, atk: 38, xpReward: 300, goldReward: 500, story: 'Финал: Трон тьмы' },
+            ];
+
             function randomEnemy() {
-                // Чем выше уровень, тем сильнее враги (но не слишком)
-                const maxIndex = Math.min(hero.level, enemyPool.length - 1);
-                const minIndex = Math.max(0, maxIndex - 2);
-                const idx = Math.floor(Math.random() * (maxIndex - minIndex + 1)) + minIndex;
-                const template = enemyPool[idx];
-                // Небольшой разброс характеристик
-                const variation = 0.9 + Math.random() * 0.2;
+                const maxIdx = Math.min(hero.level + 1, enemyPool.length - 1);
+                const minIdx = Math.max(0, maxIdx - 3);
+                const idx = Math.floor(Math.random() * (maxIdx - minIdx + 1)) + minIdx;
+                const t = enemyPool[idx];
+                const v = 0.85 + Math.random() * 0.3;
                 return {
-                    name: template.name,
-                    maxHp: Math.floor(template.hp * variation),
-                    hp: Math.floor(template.hp * variation),
-                    atk: Math.floor(template.atk * variation),
-                    xpReward: template.xpReward,
-                    goldReward: template.goldReward
+                    name: t.name, maxHp: Math.floor(t.hp * v), hp: Math.floor(t.hp * v),
+                    atk: Math.floor(t.atk * v), xpReward: t.xpReward, goldReward: t.goldReward,
+                    isBoss: false
+                };
+            }
+
+            function spawnBoss(index) {
+                const b = bosses[index];
+                return {
+                    name: b.name, maxHp: b.hp, hp: b.hp, atk: b.atk,
+                    xpReward: b.xpReward, goldReward: b.goldReward,
+                    isBoss: true, storyText: b.story
                 };
             }
 
             function spawnEnemy() {
-                enemy = randomEnemy();
+                if (storyFlags.gameEnded) return;
+                storyFlags.roomsCleared++;
+                
+                // Сюжетные события при определённом количестве комнат
+                if (storyFlags.roomsCleared === 5 && storyFlags.chapter === 1) {
+                    storyFlags.chapter = 2;
+                    chapterTitle.textContent = 'Глава II: Тёмный ритуал';
+                    enemy = spawnBoss(0);
+                    addLog('⚠️ БОСС: Некромант Морзан преграждает путь!', 'story');
+                    storyBox.textContent = 'Ты находишь зал ритуалов. Некромант Морзан проводит обряд над похищенными душами.';
+                } else if (storyFlags.roomsCleared === 10 && storyFlags.chapter === 2) {
+                    storyFlags.chapter = 3;
+                    chapterTitle.textContent = 'Глава III: Логово дракона';
+                    enemy = spawnBoss(1);
+                    addLog('⚠️ БОСС: Дракон Бездны пробуждается!', 'story');
+                    storyBox.textContent = 'Глубоко под землёй ты находишь логово дракона. Принцесса где-то рядом...';
+                } else if (storyFlags.roomsCleared === 15 && storyFlags.chapter === 3) {
+                    storyFlags.chapter = 4;
+                    chapterTitle.textContent = 'Финал: Трон тьмы';
+                    enemy = spawnBoss(2);
+                    addLog('⚠️ ФИНАЛЬНЫЙ БОСС: Архидемон Ксаракс!', 'story');
+                    storyBox.textContent = 'Ты стоишь перед вратами в тронный зал. Архидемон держит принцессу в клетке.';
+                } else {
+                    enemy = randomEnemy();
+                    // Случайные сюжетные встречи (30% шанс)
+                    if (Math.random() < 0.3 && !enemy.isBoss) {
+                        triggerRandomEvent();
+                    }
+                }
                 updateEnemyUI();
+            }
+
+            function triggerRandomEvent() {
+                const events = [
+                    {
+                        text: 'Ты находишь раненого пленника. Освободить его?',
+                        choices: [
+                            { text: '🆓 Освободить', action: () => {
+                                storyFlags.rescuedPrisoner = true;
+                                hero.potions = Math.min(hero.potions + 1, 5);
+                                addLog('Пленник даёт тебе зелье в благодарность! +1 🧪', 'heal');
+                                storyBox.textContent = 'Пленник благодарит тебя и убегает на поверхность.';
+                            }},
+                            { text: '🚶 Пройти мимо', action: () => {
+                                storyBox.textContent = 'Ты оставляешь пленника. Возможно, он бы помог...';
+                            }}
+                        ]
+                    },
+                    {
+                        text: 'Тёмный торговец предлагает сделку: 30 золота за +3 к атаке.',
+                        choices: [
+                            { text: '💰 Купить', action: () => {
+                                if (hero.gold >= 30) {
+                                    hero.gold -= 30;
+                                    hero.baseAtk += 3;
+                                    hero.atk = hero.baseAtk;
+                                    addLog('Сила наполняет тебя! +3 атаки', 'heal');
+                                    storyBox.textContent = 'Торговец исчезает во тьме, оставляя ауру силы.';
+                                } else {
+                                    storyBox.textContent = 'Не хватает золота. Торговец смеётся и уходит.';
+                                }
+                            }},
+                            { text: '❌ Отказаться', action: () => {
+                                storyBox.textContent = 'Торговец пожимает плечами и растворяется в тенях.';
+                            }}
+                        ]
+                    },
+                    {
+                        text: 'Ты находишь древний алтарь. Прикоснуться?',
+                        choices: [
+                            { text: '✋ Прикоснуться', action: () => {
+                                const r = Math.random();
+                                if (r < 0.5) {
+                                    hero.maxHp += 15;
+                                    hero.hp = Math.min(hero.hp + 15, hero.maxHp);
+                                    addLog('Алтарь благословляет тебя! +15 макс. HP', 'heal');
+                                    storyBox.textContent = 'Тёплый свет окутывает тебя. Ты чувствуешь прилив сил.';
+                                } else {
+                                    hero.hp = Math.max(1, hero.hp - 20);
+                                    addLog('Алтарь проклинает тебя! -20 HP', 'damage');
+                                    storyBox.textContent = 'Тьма вырывается из алтаря и ранит тебя!';
+                                }
+                            }},
+                            { text: '🚶 Пройти мимо', action: () => {
+                                storyBox.textContent = 'Ты решаешь не испытывать судьбу.';
+                            }}
+                        ]
+                    }
+                ];
+                const evt = events[Math.floor(Math.random() * events.length)];
+                showChoices(evt.text, evt.choices);
+            }
+
+            function showChoices(text, choices) {
+                storyBox.textContent = text;
+                choicesContainer.innerHTML = '';
+                choices.forEach((c, i) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'choice-btn';
+                    btn.textContent = c.text;
+                    btn.addEventListener('click', () => {
+                        c.action();
+                        choicesContainer.innerHTML = '';
+                        updateHeroUI();
+                    });
+                    choicesContainer.appendChild(btn);
+                });
             }
 
             function updateHeroUI() {
@@ -381,40 +488,35 @@
                 heroXpEl.textContent = hero.xp;
                 heroXpNextEl.textContent = hero.xpNext;
                 heroXpBar.style.width = `${(hero.xp / hero.xpNext) * 100}%`;
+                heroPotionsEl.textContent = hero.potions;
                 
-                // Обновить кнопки
-                const dead = hero.hp <= 0;
-                btnAttack.disabled = dead;
-                btnDefend.disabled = dead;
+                const dead = hero.hp <= 0 || storyFlags.gameEnded;
+                btnAttack.disabled = dead || !enemy;
+                btnDefend.disabled = dead || !enemy;
                 btnPotion.disabled = dead || hero.potions <= 0;
-                btnPotion.textContent = `🧪 Зелье (${hero.potions})`;
-                
-                if (dead) {
-                    deadMessage.style.display = 'block';
-                } else {
-                    deadMessage.style.display = 'none';
-                }
+                btnPotion.textContent = `🧪 (${hero.potions})`;
+                deadMessage.style.display = dead ? 'block' : 'none';
             }
 
             function updateEnemyUI() {
-                if (!enemy) return;
+                if (!enemy) {
+                    document.getElementById('enemy-panel').style.opacity = '0.4';
+                    return;
+                }
+                document.getElementById('enemy-panel').style.opacity = '1';
                 enemyNameEl.textContent = enemy.name;
                 enemyHpText.textContent = `${enemy.hp}/${enemy.maxHp}`;
                 enemyAtkEl.textContent = enemy.atk;
                 enemyHpBar.style.width = `${(enemy.hp / enemy.maxHp) * 100}%`;
             }
 
-            function addLog(message, cssClass = '') {
-                const entry = document.createElement('div');
-                entry.className = 'log-entry ' + (cssClass || '');
-                entry.textContent = message;
-                logWindow.appendChild(entry);
+            function addLog(msg, cls = '') {
+                const el = document.createElement('div');
+                el.className = 'log-entry ' + (cls || '');
+                el.textContent = msg;
+                logWindow.appendChild(el);
                 logWindow.scrollTop = logWindow.scrollHeight;
-                
-                // Ограничим количество записей, чтобы не тормозило
-                if (logWindow.children.length > 35) {
-                    logWindow.removeChild(logWindow.firstChild);
-                }
+                if (logWindow.children.length > 40) logWindow.removeChild(logWindow.firstChild);
             }
 
             function gainXp(amount) {
@@ -422,82 +524,62 @@
                 addLog(`+${amount} опыта`, 'heal');
                 while (hero.xp >= hero.xpNext) {
                     hero.xp -= hero.xpNext;
-                    levelUp();
+                    hero.level++;
+                    hero.xpNext = Math.floor(hero.xpNext * 1.5);
+                    hero.maxHp += 18;
+                    hero.hp = hero.maxHp;
+                    hero.baseAtk += 3;
+                    hero.baseDef += 1;
+                    hero.atk = hero.baseAtk;
+                    hero.def = hero.baseDef;
+                    hero.potions = Math.min(hero.potions + 1, 5);
+                    addLog(`🎉 УРОВЕНЬ ${hero.level}! Характеристики повышены!`, 'story');
                 }
-            }
-
-            function levelUp() {
-                hero.level++;
-                hero.xpNext = Math.floor(hero.xpNext * 1.5);
-                hero.maxHp += 20;
-                hero.hp = hero.maxHp; // полное исцеление при уровне
-                hero.baseAtk += 3;
-                hero.baseDef += 1;
-                hero.atk = hero.baseAtk;
-                hero.def = hero.baseDef;
-                hero.potions = Math.min(hero.potions + 1, 5);
-                addLog(`🎉 УРОВЕНЬ ${hero.level}! Характеристики повышены!`, 'levelup');
             }
 
             function heroAttack() {
-                if (!enemy || hero.hp <= 0) return;
-                // Сброс защиты после атаки
+                if (!enemy || hero.hp <= 0 || storyFlags.gameEnded) return;
                 hero.defending = false;
                 hero.def = hero.baseDef;
-                
-                const damage = Math.max(1, hero.atk - Math.floor(enemy.atk * 0.2) + Math.floor(Math.random() * 5));
-                enemy.hp -= damage;
-                addLog(`Ты наносишь ${damage} урона ${enemy.name}.`, 'damage');
-                
-                if (enemy.hp <= 0) {
-                    enemyDefeated();
-                } else {
-                    enemyTurn();
-                }
+                const dmg = Math.max(1, hero.atk - Math.floor(enemy.atk * 0.15) + Math.floor(Math.random() * 6));
+                enemy.hp -= dmg;
+                addLog(`Ты наносишь ${dmg} урона ${enemy.name}.`, 'damage');
+                if (enemy.hp <= 0) enemyDefeated();
+                else enemyTurn();
                 updateEnemyUI();
                 updateHeroUI();
             }
 
             function heroDefend() {
-                if (!enemy || hero.hp <= 0) return;
+                if (!enemy || hero.hp <= 0 || storyFlags.gameEnded) return;
                 hero.defending = true;
-                hero.def = hero.baseDef + Math.floor(hero.baseDef * 1.2) + 2;
-                addLog('Ты поднимаешь щит! Защита удвоена.', 'heal');
+                hero.def = hero.baseDef + Math.floor(hero.baseDef * 1.5) + 3;
+                addLog('Ты поднимаешь щит! Защита повышена.', 'heal');
                 enemyTurn();
                 updateHeroUI();
             }
 
             function usePotion() {
-                if (hero.potions <= 0 || hero.hp <= 0) return;
+                if (hero.potions <= 0 || hero.hp <= 0 || storyFlags.gameEnded) return;
                 hero.potions--;
-                const healAmount = Math.floor(hero.maxHp * 0.4) + Math.floor(Math.random() * 15);
-                const actualHeal = Math.min(healAmount, hero.maxHp - hero.hp);
-                hero.hp += actualHeal;
-                addLog(`Ты выпил зелье (+${actualHeal} HP).`, 'heal');
-                
-                // После зелья враг атакует
-                if (enemy && enemy.hp > 0) {
-                    enemyTurn();
-                }
+                const heal = Math.min(Math.floor(hero.maxHp * 0.45) + 8, hero.maxHp - hero.hp);
+                hero.hp += heal;
+                addLog(`Зелье восстанавливает ${heal} HP.`, 'heal');
+                if (enemy && enemy.hp > 0) enemyTurn();
                 updateHeroUI();
             }
 
             function enemyTurn() {
                 if (!enemy || enemy.hp <= 0 || hero.hp <= 0) return;
-                const rawDamage = enemy.atk - hero.def + Math.floor(Math.random() * 4);
-                const damage = Math.max(1, rawDamage);
-                hero.hp -= damage;
-                addLog(`${enemy.name} атакует и наносит ${damage} урона.`, 'damage');
-                
+                const raw = enemy.atk - hero.def + Math.floor(Math.random() * 5);
+                const dmg = Math.max(1, raw);
+                hero.hp -= dmg;
+                addLog(`${enemy.name} атакует, нанося ${dmg} урона.`, 'damage');
                 if (hero.hp <= 0) {
                     hero.hp = 0;
                     addLog('💀 Ты пал в бою...', 'damage');
                 }
-                // Сброс защиты после вражеской атаки
-                if (hero.defending) {
-                    hero.def = hero.baseDef;
-                    hero.defending = false;
-                }
+                if (hero.defending) { hero.def = hero.baseDef; hero.defending = false; }
                 updateHeroUI();
             }
 
@@ -506,39 +588,100 @@
                 hero.gold += enemy.goldReward;
                 addLog(`💰 +${enemy.goldReward} золота`, 'gold');
                 gainXp(enemy.xpReward);
-                // Новый враг
-                spawnEnemy();
+
+                // Сюжетные последствия после боссов
+                if (enemy.isBoss) {
+                    handleBossDefeat();
+                } else {
+                    spawnEnemy();
+                }
                 updateHeroUI();
                 updateEnemyUI();
+            }
+
+            function handleBossDefeat() {
+                if (storyFlags.chapter === 2) {
+                    // Некромант побеждён
+                    showChoices('Некромант молит о пощаде. Что делать?', [
+                        { text: '🗡️ Добить', action: () => {
+                            addLog('Ты уничтожаешь некроманта. Его души освобождены.', 'story');
+                            storyFlags.sparedBoss = false;
+                            storyBox.textContent = 'Ты чувствуешь холод победы. Путь вперёд открыт.';
+                            spawnEnemy();
+                            choicesContainer.innerHTML = '';
+                        }},
+                        { text: '🤝 Пощадить', action: () => {
+                            addLog('Некромант даёт тебе ключ от нижних уровней.', 'story');
+                            storyFlags.sparedBoss = true;
+                            hero.gold += 50;
+                            storyBox.textContent = 'Некромант исчезает, оставив ценный ключ и золото.';
+                            spawnEnemy();
+                            choicesContainer.innerHTML = '';
+                        }}
+                    ]);
+                } else if (storyFlags.chapter === 3) {
+                    showChoices('Дракон Бездны пал. Забрать его сокровище или идти дальше?', [
+                        { text: '💎 Забрать сокровище', action: () => {
+                            hero.gold += 200;
+                            hero.maxHp += 30;
+                            hero.hp = hero.maxHp;
+                            addLog('Сокровище дракона усиливает тебя! +200 золота, +30 HP', 'heal');
+                            storyFlags.foundArtifact = true;
+                            storyBox.textContent = 'Среди сокровищ ты находишь амулет, усиливающий жизненную силу.';
+                            spawnEnemy();
+                            choicesContainer.innerHTML = '';
+                        }},
+                        { text: '🏃 Идти дальше', action: () => {
+                            storyBox.textContent = 'Ты оставляешь сокровище и спешишь к принцессе.';
+                            spawnEnemy();
+                            choicesContainer.innerHTML = '';
+                        }}
+                    ]);
+                } else if (storyFlags.chapter === 4) {
+                    // Финальный босс
+                    endGame('good');
+                }
+            }
+
+            function endGame(ending) {
+                storyFlags.gameEnded = true;
+                enemy = null;
+                updateEnemyUI();
+                choicesContainer.innerHTML = '';
+                
+                if (ending === 'good') {
+                    storyBox.textContent = '🌟 Ты победил Архидемона! Принцесса Алисия свободна. Королевство празднует твою победу. Ты — герой!';
+                    addLog('👑 КОНЦОВКА: Слава героя! Принцесса спасена!', 'story');
+                } else if (ending === 'sacrifice') {
+                    storyBox.textContent = '💔 Ты пожертвовал собой, чтобы запечатать портал. Принцесса спасена, но тебя больше нет...';
+                    addLog('🕯️ КОНЦОВКА: Жертва героя. Тебя будут помнить вечно.', 'story');
+                }
+                chapterTitle.textContent = 'Конец';
+                updateHeroUI();
             }
 
             function restartGame() {
-                hero.maxHp = 100;
-                hero.hp = 100;
-                hero.baseAtk = 8;
-                hero.baseDef = 3;
-                hero.atk = 8;
-                hero.def = 3;
-                hero.gold = 0;
-                hero.level = 1;
-                hero.xp = 0;
-                hero.xpNext = 20;
-                hero.potions = 3;
-                hero.defending = false;
-                
-                logWindow.innerHTML = '<div class="log-entry">Новое приключение начинается...</div>';
+                hero.maxHp = 100; hero.hp = 100; hero.baseAtk = 8; hero.baseDef = 3;
+                hero.atk = 8; hero.def = 3; hero.gold = 0; hero.level = 1;
+                hero.xp = 0; hero.xpNext = 20; hero.potions = 3; hero.defending = false;
+                storyFlags = { rescuedPrisoner: false, acceptedDeal: false, foundArtifact: false,
+                    sparedBoss: false, chapter: 1, roomsCleared: 0, gameEnded: false };
+                chapterTitle.textContent = 'Глава I: Зов тьмы';
+                storyBox.textContent = 'Принцесса Алисия похищена тёмным культом. Ты — её последняя надежда...';
+                logWindow.innerHTML = '<div class="log-entry story">📜 Твоё приключение начинается...</div>';
+                choicesContainer.innerHTML = '';
+                enemy = null;
                 spawnEnemy();
                 updateHeroUI();
                 updateEnemyUI();
             }
 
-            // ========== ПРИВЯЗКА СОБЫТИЙ ==========
             btnAttack.addEventListener('click', heroAttack);
             btnDefend.addEventListener('click', heroDefend);
             btnPotion.addEventListener('click', usePotion);
             btnRestart.addEventListener('click', restartGame);
 
-            // ========== СТАРТ ==========
+            // Старт
             spawnEnemy();
             updateHeroUI();
         })();
