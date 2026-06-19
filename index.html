@@ -1,389 +1,464 @@
+Вот HTML-код игры-кликера с накоплением очков, улучшениями и анимацией:
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>🏰 DUNGEON LEAP</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>🍪 Кликер-печенька</title>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
         body {
-            background: #0a0a0f;
+            background: linear-gradient(145deg, #2d1b0e 0%, #4a3724 100%);
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            font-family: 'Courier New', monospace;
-        }
-        .game-wrapper {
-            background: #1a1a2a;
+            font-family: 'Segoe UI', 'Arial', sans-serif;
             padding: 20px;
-            border-radius: 24px;
-            border: 3px solid #8b0000;
-            box-shadow: 0 0 30px #8b000088;
+            margin: 0;
         }
-        canvas {
-            display: block;
-            margin: 0 auto;
-            border-radius: 12px;
-            border: 2px solid #4a0000;
-            background: #0d0d15;
-            cursor: pointer;
-        }
-        .ui-panel {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 12px 8px 0 8px;
-            color: #d4af37;
-            text-shadow: 2px 2px 0 #4a0000;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        .hearts { color: #ff4444; font-size: 28px; letter-spacing: 4px; }
-        .coins { color: #ffd700; }
-        button {
-            background: #2a1a1a;
-            color: #d4af37;
-            border: 2px solid #8b0000;
-            padding: 10px 24px;
-            border-radius: 40px;
-            font-size: 18px;
-            font-weight: bold;
-            cursor: pointer;
-            box-shadow: 0 4px 0 #4a0000;
-            transition: 0.1s;
-            margin-top: 12px;
+
+        .game-container {
+            background: rgba(255, 243, 224, 0.9);
+            backdrop-filter: blur(15px);
+            border-radius: 60px 60px 40px 40px;
+            padding: 30px 25px;
+            box-shadow: 0 30px 45px rgba(0,0,0,0.5), inset 0 2px 8px rgba(255,255,200,0.6);
+            text-align: center;
             width: 100%;
+            max-width: 420px;
+            border: 2px solid #d49b6a;
+            transition: transform 0.2s;
         }
-        button:active { transform: translateY(4px); box-shadow: none; }
-        .hidden { display: none; }
-        .overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); display: flex; justify-content: center;
-            align-items: center; z-index: 1000;
+
+        h1 {
+            color: #4a2c1a;
+            text-shadow: 2px 2px 0 #e7c68b;
+            font-size: 2.6rem;
+            margin-bottom: 5px;
+            letter-spacing: 2px;
+            font-weight: 800;
         }
-        .overlay-box {
-            background: #1a1a2a; padding: 30px; border-radius: 30px;
-            border: 3px solid #8b0000; text-align: center; color: #d4af37;
+
+        .score-panel {
+            background: #5e3a22;
+            border-radius: 100px;
+            padding: 15px 25px;
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            color: #ffd78b;
+            font-weight: bold;
+            font-size: 2.2rem;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.5), 0 8px 12px rgba(0,0,0,0.3);
+            border: 2px solid #b7824a;
         }
-        .overlay-box h2 { font-size: 36px; margin-bottom: 16px; }
-        .overlay-box button {
-            background: #8b0000; color: #d4af37; border: none;
-            padding: 14px 30px; font-size: 20px; margin-top: 20px;
+
+        .cookie-icon {
+            font-size: 2.2rem;
+            filter: drop-shadow(0 4px 4px black);
+        }
+
+        #clicker-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 8rem;
+            transition: transform 0.07s ease;
+            filter: drop-shadow(0 18px 12px rgba(0,0,0,0.5));
+            margin: 15px 0 5px;
+            padding: 0;
+            line-height: 1;
+            display: inline-block;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        #clicker-btn:active {
+            transform: scale(0.85);
+            filter: drop-shadow(0 8px 8px rgba(0,0,0,0.6));
+        }
+
+        .per-second {
+            background: #dfcba4;
+            border-radius: 30px;
+            padding: 8px 18px;
+            display: inline-block;
+            margin: 5px 0 15px;
+            font-weight: 600;
+            color: #3b2b19;
+            border: 1px solid #b59564;
+            font-size: 1.1rem;
+            box-shadow: inset 0 1px 4px white;
+        }
+
+        .upgrades-section {
+            background: #f5e7d3;
+            border-radius: 45px;
+            padding: 18px 12px;
+            margin-top: 15px;
+            box-shadow: inset 0 2px 8px rgba(90, 50, 10, 0.5);
+            border: 2px solid #c89f72;
+        }
+
+        .upgrade-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #fef7e9;
+            margin: 10px 0;
+            padding: 12px 15px;
+            border-radius: 40px;
+            border: 2px solid #b5824a;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .upgrade-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            font-weight: bold;
+            color: #3e2c18;
+        }
+
+        .upgrade-name {
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .upgrade-effect {
+            font-size: 0.8rem;
+            color: #6b4f32;
+            background: #ffe3b0;
+            padding: 2px 10px;
+            border-radius: 15px;
+        }
+
+        .buy-btn {
+            background: #fdae5c;
+            border: none;
+            border-radius: 35px;
+            padding: 12px 18px;
+            font-weight: bold;
+            font-size: 1rem;
+            color: #382813;
+            background: linear-gradient(180deg, #ffc107 0%, #f08a2d 100%);
+            border-bottom: 4px solid #b45f1a;
+            cursor: pointer;
+            transition: 0.1s linear;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .buy-btn:active {
+            border-bottom-width: 2px;
+            transform: translateY(2px);
+            background: #e07b1f;
+        }
+
+        .buy-btn:disabled {
+            opacity: 0.5;
+            filter: grayscale(0.6);
+            border-bottom-width: 2px;
+            transform: none;
+            pointer-events: none;
+            background: #b9a087;
+            border-bottom-color: #6b5a4a;
+        }
+
+        .reset-btn {
+            background: #c9a78b;
+            border: none;
+            border-radius: 30px;
+            padding: 8px 20px;
+            margin-top: 12px;
+            font-weight: bold;
+            color: #352415;
+            border-bottom: 3px solid #745d46;
+            cursor: pointer;
+            transition: 0.2s;
+            background: #e7c9a8;
+        }
+
+        .reset-btn:active {
+            transform: translateY(2px);
+            border-bottom-width: 2px;
+        }
+
+        .float-text {
+            position: fixed;
+            pointer-events: none;
+            animation: floatUp 0.9s ease-out forwards;
+            font-weight: bold;
+            color: #fbe555;
+            text-shadow: 2px 2px 0 #5e3300;
+            font-size: 1.8rem;
+            z-index: 999;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-70px) scale(1.4);
+            }
         }
     </style>
 </head>
 <body>
-<div class="game-wrapper">
-    <div class="ui-panel">
-        <span class="hearts" id="hearts">❤️❤️❤️</span>
-        <span class="coins">💰 <span id="score">0</span></span>
-    </div>
-    <canvas id="canvas" width="800" height="400"></canvas>
-    <button id="restartBtn">🔄 НАЧАТЬ ЗАНОВО</button>
-</div>
-<div id="gameOverlay" class="overlay hidden">
-    <div class="overlay-box">
-        <h2 id="overlayTitle">💀 ВЫ ПОГИБЛИ</h2>
-        <p id="overlayMessage">Крысы загрызли эльфа...</p>
-        <button onclick="location.reload()">🔄 ИГРАТЬ СНОВА</button>
-    </div>
-</div>
+    <div class="game-container">
+        <h1>🍪 ПЕЧЕНЬКО-КЛИКЕР</h1>
+        
+        <div class="score-panel">
+            <span class="cookie-icon">🍪</span>
+            <span id="cookie-count">0</span>
+        </div>
 
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-<script>
-    const tg = window.Telegram.WebApp;
-    tg.ready(); tg.expand();
+        <button id="clicker-btn">🍪</button>
 
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    
-    // Игрок
-    const player = {
-        x: 50, y: 300, width: 30, height: 40,
-        vx: 0, vy: 0, speed: 4, jumpPower: -9,
-        health: 3, maxHealth: 3,
-        grounded: false
-    };
-    
-    // Управление
-    const keys = { a: false, d: false, space: false };
-    
-    // Мир
-    let platforms = [];
-    let coins = [];
-    let enemies = [];
-    let spikes = [];
-    let door = null;
-    let key = null;
-    let hasKey = false;
-    let score = 0;
-    let gameActive = true;
-    let currentLevel = 1;
-    
-    function buildLevel() {
-        platforms = [
-            { x: 0, y: 360, w: 800, h: 40 }, // пол
-            { x: 200, y: 280, w: 120, h: 15 },
-            { x: 450, y: 220, w: 150, h: 15 },
-            { x: 650, y: 300, w: 100, h: 15 }
-        ];
-        
-        coins = [
-            { x: 250, y: 250, w: 15, h: 15, collected: false },
-            { x: 500, y: 190, w: 15, h: 15, collected: false },
-            { x: 700, y: 270, w: 15, h: 15, collected: false }
-        ];
-        
-        enemies = [
-            { x: 300, y: 330, w: 25, h: 25, vx: 1.5, minX: 250, maxX: 400, alive: true }
-        ];
-        
-        spikes = [
-            { x: 400, y: 345, w: 30, h: 15 }
-        ];
-        
-        key = { x: 550, y: 190, w: 15, h: 15, collected: false };
-        door = { x: 750, y: 270, w: 30, h: 60, opened: false };
-    }
-    
-    buildLevel();
-    
-    function resetGame() {
-        player.x = 50; player.y = 300; player.vx = 0; player.vy = 0;
-        player.health = player.maxHealth;
-        hasKey = false;
-        score = 0;
-        gameActive = true;
-        currentLevel = 1;
-        buildLevel();
-        document.getElementById('gameOverlay').classList.add('hidden');
-        updateUI();
-    }
-    
-    function updateUI() {
-        const hearts = '❤️'.repeat(player.health) + '🖤'.repeat(player.maxHealth - player.health);
-        document.getElementById('hearts').textContent = hearts;
-        document.getElementById('score').textContent = score;
-    }
-    
-    function checkCollisions() {
-        player.grounded = false;
-        
-        // Платформы
-        platforms.forEach(p => {
-            if (player.x < p.x + p.w && player.x + player.width > p.x &&
-                player.y + player.height > p.y && player.y < p.y + p.h) {
-                if (player.vy >= 0 && player.y + player.height - player.vy <= p.y) {
-                    player.y = p.y - player.height;
-                    player.vy = 0;
-                    player.grounded = true;
-                }
-            }
-        });
-        
-        // Монетки
-        coins.forEach(c => {
-            if (!c.collected && player.x < c.x + c.w && player.x + player.width > c.x &&
-                player.y < c.y + c.h && player.y + player.height > c.y) {
-                c.collected = true;
-                score += 10;
-                updateUI();
-            }
-        });
-        
-        // Ключ
-        if (!key.collected && player.x < key.x + key.w && player.x + player.width > key.x &&
-            player.y < key.y + key.h && player.y + player.height > key.y) {
-            key.collected = true;
-            hasKey = true;
-        }
-        
-        // Дверь
-        if (hasKey && !door.opened && player.x < door.x + door.w && player.x + player.width > door.x &&
-            player.y < door.y + door.h && player.y + player.height > door.y) {
-            door.opened = true;
-            currentLevel++;
-            if (currentLevel > 3) {
-                gameActive = false;
-                document.getElementById('overlayTitle').textContent = '🏆 ПОБЕДА!';
-                document.getElementById('overlayMessage').textContent = 'Эльф сбежал из замка!';
-                document.getElementById('gameOverlay').classList.remove('hidden');
-            } else {
-                player.x = 50; player.y = 300;
-                buildLevel();
-                hasKey = false;
-            }
-        }
-        
-        // Враги
-        enemies.forEach(e => {
-            if (!e.alive) return;
-            e.x += e.vx;
-            if (e.x < e.minX || e.x + e.w > e.maxX) e.vx *= -1;
+        <div class="per-second">
+            ⏣ <span id="cookies-per-sec">0</span> печенек/сек
+        </div>
+
+        <div class="upgrades-section">
+            <div class="upgrade-row" id="upgrade-cursor">
+                <div class="upgrade-info">
+                    <span class="upgrade-name">🖱️ Курсор</span>
+                    <span class="upgrade-effect">+1 печенька/клик</span>
+                </div>
+                <button class="buy-btn" id="buy-cursor-btn">💰 <span id="cursor-cost">15</span></button>
+            </div>
+            <div class="upgrade-row" id="upgrade-grandma">
+                <div class="upgrade-info">
+                    <span class="upgrade-name">👵 Бабуля</span>
+                    <span class="upgrade-effect">+1 печенька/сек</span>
+                </div>
+                <button class="buy-btn" id="buy-grandma-btn">💰 <span id="grandma-cost">100</span></button>
+            </div>
+            <div class="upgrade-row" id="upgrade-farm">
+                <div class="upgrade-info">
+                    <span class="upgrade-name">🌾 Ферма</span>
+                    <span class="upgrade-effect">+5 печенек/сек</span>
+                </div>
+                <button class="buy-btn" id="buy-farm-btn">💰 <span id="farm-cost">500</span></button>
+            </div>
+        </div>
+
+        <button class="reset-btn" id="reset-button">🔄 Сбросить прогресс</button>
+        <div style="font-size:0.8rem; margin-top:8px; color:#6b4e2e;">Кликай по печеньке!</div>
+    </div>
+
+    <script>
+        (function() {
+            // ---------- СОСТОЯНИЕ ИГРЫ ----------
+            const state = {
+                cookies: 0,
+                clickPower: 1,        // базовый клик = 1 печенька
+                cookiesPerSecond: 0,
+                // Уровни улучшений
+                cursors: 0,
+                grandmas: 0,
+                farms: 0,
+                // Базовые стоимости
+                baseCursorCost: 15,
+                baseGrandmaCost: 100,
+                baseFarmCost: 500
+            };
+
+            // DOM элементы
+            const cookieCountEl = document.getElementById('cookie-count');
+            const cookiesPerSecEl = document.getElementById('cookies-per-sec');
+            const clickerBtn = document.getElementById('clicker-btn');
             
-            if (player.x < e.x + e.w && player.x + player.width > e.x &&
-                player.y < e.y + e.h && player.y + player.height > e.y) {
-                player.health--;
-                player.x = 50; player.y = 300;
-                updateUI();
-                if (player.health <= 0) {
-                    gameActive = false;
-                    document.getElementById('gameOverlay').classList.remove('hidden');
+            const buyCursorBtn = document.getElementById('buy-cursor-btn');
+            const cursorCostEl = document.getElementById('cursor-cost');
+            
+            const buyGrandmaBtn = document.getElementById('buy-grandma-btn');
+            const grandmaCostEl = document.getElementById('grandma-cost');
+            
+            const buyFarmBtn = document.getElementById('buy-farm-btn');
+            const farmCostEl = document.getElementById('farm-cost');
+            
+            const resetBtn = document.getElementById('reset-button');
+
+            // ---------- ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ----------
+            function calculateCursorCost() {
+                return Math.floor(state.baseCursorCost * Math.pow(1.15, state.cursors));
+            }
+
+            function calculateGrandmaCost() {
+                return Math.floor(state.baseGrandmaCost * Math.pow(1.15, state.grandmas));
+            }
+
+            function calculateFarmCost() {
+                return Math.floor(state.baseFarmCost * Math.pow(1.15, state.farms));
+            }
+
+            // Обновить cookiesPerSecond на основе зданий
+            function updateCookiesPerSecond() {
+                state.cookiesPerSecond = state.grandmas * 1 + state.farms * 5;
+                cookiesPerSecEl.textContent = state.cookiesPerSecond;
+            }
+
+            // Полное обновление интерфейса (кнопки, текст)
+            function refreshUI() {
+                cookieCountEl.textContent = Math.floor(state.cookies);
+                cookiesPerSecEl.textContent = state.cookiesPerSecond;
+                
+                const cursorCost = calculateCursorCost();
+                cursorCostEl.textContent = cursorCost;
+                buyCursorBtn.disabled = (state.cookies < cursorCost);
+                
+                const grandmaCost = calculateGrandmaCost();
+                grandmaCostEl.textContent = grandmaCost;
+                buyGrandmaBtn.disabled = (state.cookies < grandmaCost);
+                
+                const farmCost = calculateFarmCost();
+                farmCostEl.textContent = farmCost;
+                buyFarmBtn.disabled = (state.cookies < farmCost);
+            }
+
+            // Добавление печенек (с анимацией)
+            function addCookies(amount, eventX = null, eventY = null) {
+                if (amount <= 0) return;
+                state.cookies += amount;
+                
+                // Создаём плавающий текст, если переданы координаты
+                if (eventX !== null && eventY !== null && amount >= 1) {
+                    createFloatingText(eventX, eventY, `+${Math.floor(amount)}`);
+                }
+                
+                refreshUI();
+            }
+
+            // Анимация "+число"
+            function createFloatingText(x, y, text) {
+                const floatEl = document.createElement('div');
+                floatEl.className = 'float-text';
+                floatEl.textContent = text;
+                floatEl.style.left = `${x}px`;
+                floatEl.style.top = `${y}px`;
+                document.body.appendChild(floatEl);
+                
+                floatEl.addEventListener('animationend', () => {
+                    floatEl.remove();
+                });
+            }
+
+            // Покупка улучшения (универсальная логика)
+            function purchaseUpgrade(cost, onSuccess) {
+                if (state.cookies >= cost) {
+                    state.cookies -= cost;
+                    onSuccess();
+                    refreshUI();
+                    return true;
+                }
+                return false;
+            }
+
+            // ---------- ДЕЙСТВИЯ ИГРОКА ----------
+            function handleCookieClick(event) {
+                // Определяем координаты для анимации
+                let clientX, clientY;
+                if (event.touches) {
+                    // Мобильное касание
+                    clientX = event.touches[0].clientX;
+                    clientY = event.touches[0].clientY;
+                } else {
+                    clientX = event.clientX;
+                    clientY = event.clientY;
+                }
+                
+                const power = state.clickPower + state.cursors; // каждый курсор +1 к клику
+                addCookies(power, clientX, clientY);
+            }
+
+            function buyCursor() {
+                const cost = calculateCursorCost();
+                purchaseUpgrade(cost, () => {
+                    state.cursors++;
+                    // клик-сила увеличивается за счёт курсоров (учтено в handleCookieClick)
+                });
+            }
+
+            function buyGrandma() {
+                const cost = calculateGrandmaCost();
+                purchaseUpgrade(cost, () => {
+                    state.grandmas++;
+                    updateCookiesPerSecond();
+                });
+            }
+
+            function buyFarm() {
+                const cost = calculateFarmCost();
+                purchaseUpgrade(cost, () => {
+                    state.farms++;
+                    updateCookiesPerSecond();
+                });
+            }
+
+            function resetGame() {
+                if (confirm('Точно сбросить всё? Прогресс будет потерян.')) {
+                    state.cookies = 0;
+                    state.cursors = 0;
+                    state.grandmas = 0;
+                    state.farms = 0;
+                    state.clickPower = 1;
+                    updateCookiesPerSecond();
+                    refreshUI();
                 }
             }
-        });
-        
-        // Шипы
-        spikes.forEach(s => {
-            if (player.x < s.x + s.w && player.x + player.width > s.x &&
-                player.y + player.height > s.y && player.y < s.y + s.h) {
-                player.health--;
-                player.x = 50; player.y = 300;
-                updateUI();
-                if (player.health <= 0) {
-                    gameActive = false;
-                    document.getElementById('gameOverlay').classList.remove('hidden');
+
+            // ---------- АВТОМАТИЧЕСКОЕ ПРОИЗВОДСТВО (каждую секунду) ----------
+            function gameLoop() {
+                if (state.cookiesPerSecond > 0) {
+                    // Добавляем печеньки без анимации (или с анимацией от центра? без координат)
+                    addCookies(state.cookiesPerSecond, null, null);
                 }
             }
-        });
-    }
-    
-    function update() {
-        if (!gameActive) return;
-        
-        // Управление
-        if (keys.a) player.vx = -player.speed;
-        else if (keys.d) player.vx = player.speed;
-        else player.vx = 0;
-        
-        if (keys.space && player.grounded) {
-            player.vy = player.jumpPower;
-            player.grounded = false;
-        }
-        
-        // Гравитация
-        player.vy += 0.5;
-        player.y += player.vy;
-        player.x += player.vx;
-        
-        // Границы
-        player.x = Math.max(0, Math.min(canvas.width - player.width, player.x));
-        if (player.y > canvas.height) {
-            player.health = 0;
-            gameActive = false;
-            document.getElementById('gameOverlay').classList.remove('hidden');
-        }
-        
-        checkCollisions();
-    }
-    
-    function draw() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // Фон
-        ctx.fillStyle = '#0d0d15';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < 20; i++) {
-            ctx.fillStyle = '#2a1a1a';
-            ctx.beginPath();
-            ctx.arc((i * 47) % canvas.width, (i * 31) % canvas.height, 2, 0, Math.PI * 2);
-            ctx.fill();
-        }
-        
-        // Платформы
-        ctx.fillStyle = '#4a4a6a';
-        platforms.forEach(p => {
-            ctx.fillRect(p.x, p.y, p.w, p.h);
-            ctx.fillStyle = '#3a3a5a';
-            ctx.fillRect(p.x, p.y, p.w, 5);
-            ctx.fillStyle = '#4a4a6a';
-        });
-        
-        // Монетки
-        ctx.fillStyle = '#ffd700';
-        ctx.shadowColor = '#ffaa00';
-        ctx.shadowBlur = 10;
-        coins.forEach(c => { if (!c.collected) ctx.fillRect(c.x, c.y, c.w, c.h); });
-        
-        // Ключ
-        if (!key.collected) {
-            ctx.fillStyle = '#d4af37';
-            ctx.fillRect(key.x, key.y, key.w, key.h);
-        }
-        
-        // Дверь
-        ctx.fillStyle = door.opened ? '#5a3a1a' : '#8b4513';
-        ctx.fillRect(door.x, door.y, door.w, door.h);
-        if (!door.opened) {
-            ctx.fillStyle = '#d4af37';
-            ctx.beginPath();
-            ctx.arc(door.x + 20, door.y + 30, 5, 0, Math.PI * 2);
-            ctx.fill();
-        }
-        
-        // Шипы
-        ctx.fillStyle = '#8b0000';
-        ctx.shadowBlur = 0;
-        spikes.forEach(s => { ctx.fillRect(s.x, s.y, s.w, s.h); });
-        
-        // Враги
-        ctx.fillStyle = '#2a5a2a';
-        ctx.shadowColor = '#0f0';
-        ctx.shadowBlur = 8;
-        enemies.forEach(e => { if (e.alive) ctx.fillRect(e.x, e.y, e.w, e.h); });
-        
-        // Игрок (эльф)
-        ctx.shadowBlur = 0;
-        ctx.fillStyle = '#2a8a4a';
-        ctx.fillRect(player.x, player.y, player.width, player.height);
-        ctx.fillStyle = '#1a6a3a';
-        ctx.fillRect(player.x + 5, player.y - 10, 8, 15); // уши
-        ctx.fillRect(player.x + 17, player.y - 10, 8, 15);
-        ctx.fillStyle = '#d4af37';
-        ctx.fillRect(player.x + 10, player.y + 5, 10, 5); // пояс
-        
-        ctx.shadowBlur = 0;
-    }
-    
-    function gameLoop() {
-        update();
-        draw();
-        requestAnimationFrame(gameLoop);
-    }
-    
-    // Управление
-    window.addEventListener('keydown', (e) => {
-        if (e.key === 'a' || e.key === 'A') keys.a = true;
-        if (e.key === 'd' || e.key === 'D') keys.d = true;
-        if (e.key === ' ') { e.preventDefault(); keys.space = true; }
-    });
-    window.addEventListener('keyup', (e) => {
-        if (e.key === 'a' || e.key === 'A') keys.a = false;
-        if (e.key === 'd' || e.key === 'D') keys.d = false;
-        if (e.key === ' ') { e.preventDefault(); keys.space = false; }
-    });
-    
-    // Тач-управление для телефона
-    let touchLeft = false, touchRight = false, touchJump = false;
-    canvas.addEventListener('touchstart', (e) => {
-        e.preventDefault();
-        const rect = canvas.getBoundingClientRect();
-        const touch = e.touches[0];
-        const x = touch.clientX - rect.left;
-        if (x < canvas.width / 3) keys.a = true;
-        else if (x > canvas.width * 2 / 3) keys.d = true;
-        else keys.space = true;
-    });
-    canvas.addEventListener('touchend', (e) => {
-        e.preventDefault();
-        keys.a = false; keys.d = false; keys.space = false;
-    });
-    
-    document.getElementById('restartBtn').addEventListener('click', resetGame);
-    
-    updateUI();
-    gameLoop();
-</script>
+
+            // ---------- ПРИВЯЗКА СОБЫТИЙ ----------
+            clickerBtn.addEventListener('click', handleCookieClick);
+            clickerBtn.addEventListener('touchstart', (e) => {
+                e.preventDefault(); // чтобы не было двойного срабатывания на мобильных
+                handleCookieClick(e);
+            }, {passive: false});
+            
+            buyCursorBtn.addEventListener('click', buyCursor);
+            buyGrandmaBtn.addEventListener('click', buyGrandma);
+            buyFarmBtn.addEventListener('click', buyFarm);
+            resetBtn.addEventListener('click', resetGame);
+
+            // Инициализация интерфейса
+            updateCookiesPerSecond();
+            refreshUI();
+
+            // Запуск игрового цикла (каждые 1000 мс)
+            setInterval(gameLoop, 1000);
+
+            // Дополнительно: сохранять прогресс? (для простоты без сохранения, но можно добавить)
+            console.log('🍪 Кликер готов! Жми на печеньку.');
+        })();
+    </script>
 </body>
-    </html>
+</html>
+```
